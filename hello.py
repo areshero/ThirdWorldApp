@@ -44,10 +44,8 @@ def handleMessage():
 
 def handlerMessageBody():
     requestBody = request.values.get('Body')
-    requestList = requestBody.split(" ")
-    requestBodyResult = str(requestList[1]) + " " + str(requestList[3])
 
-    return requestBodyResult
+    return requestBody
 
 if __name__ == "__main__":
     app.run(debug=True)
