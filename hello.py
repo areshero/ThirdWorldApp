@@ -29,8 +29,8 @@ def hello_monkey():
     else:
         message = "error"
     resp = twilio.twiml.Response()
-    resp.sms(message)
     resp.say('Hello monkey!!~~')
+    resp.sms(message)
     return str(resp)
  
 if __name__ == "__main__":
