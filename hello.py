@@ -4,8 +4,7 @@ import googlemaps
 from datetime import datetime
 import json
 from googlemaps import convert
-import html2text
-
+from BeautifulSoup import BeautifulSoup
 
 #AIzaSyC6ATRDCMZm2hv7Ay2nl3EgA98r2ebKHEQ
 
@@ -63,8 +62,13 @@ def handlerMessageBody():
 
 	elif requestParams[0].lower() == "navigate" :
 		# Get directions
-		origin = "University of Southern California, Los Angeles, CA"
-		destination = "Galen Center, South Figueroa Street, Los Angeles, CA"
+		# origin = "University of Southern California, Los Angeles, CA"
+		# destination = "Galen Center, South Figueroa Street, Los Angeles, CA"
+		fromIndex = requestBody.index('from')
+		toIndex = requestBody.index('to')
+		origin = requestBody[fromIndex+5:toIndex]
+		destination = requestBody[toIndex+3:]
+
 		responseMessage = getDirections(origin,destination)
 	elif requestParams[0].lower() == "hehe" :
 		responseMessage = "hehe your sister! zai jian!"
@@ -77,9 +81,15 @@ def getDirections(origin,destination):
 	gmaps = googlemaps.Client(key='AIzaSyC6ATRDCMZm2hv7Ay2nl3EgA98r2ebKHEQ')
 	directionsResult = directions(gmaps,origin,destination)
 	res = ""
+	if len(directionsResult) == 0:
+		return res
 	for index,currStep in enumerate(directionsResult[0]["legs"][0]["steps"]):
-		res += str(index+1) + html2text.html2text(currStep["html_instructions"])
-	print res
+		html = currStep["html_instructions"]
+		soup = BeautifulSoup(html)
+		text_parts = soup.findAll(text=True)
+		text = ''.join(text_parts)
+		res += str(index+1) +". "+ text + ". "
+
 	return res
 '''
 	geocode_result = gmaps.geocode('USC')
