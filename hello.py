@@ -25,11 +25,12 @@ def hello_monkey():
         name = "Monkey"
     if 'To' in request.values:
         messageTo = request.values.get('To')
-        message = "".join([name, " has messaged ", messageTo, " ", str(counter), " times."])
+        message = "".join([name, " has messaged ", messageTo, ", ", str(counter), " times."])
     else:
         message = "error"
     resp = twilio.twiml.Response()
     resp.sms(message)
+    resp.say('Hello monkey!!~~')
     return str(resp)
  
 if __name__ == "__main__":
