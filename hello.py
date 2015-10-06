@@ -19,13 +19,14 @@ def hello_monkey():
     session['counter'] = counter
  
     from_number = request.values.get('From')
+    requestBody = request.values.get('Body')
     if from_number in callers:
         name = callers[from_number]
     else:
         name = "Monkey"
     if 'To' in request.values:
         messageTo = request.values.get('To')
-        message = "".join([name, " has messaged ", messageTo, ", ", str(counter), " times."])
+        message = "".join([requestBody," ", name, " has messaged ", messageTo, ", ", str(counter), " times."])
     else:
         message = "error"
     resp = twilio.twiml.Response()
