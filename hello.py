@@ -21,7 +21,7 @@ callers = {
 	"+16412750872": "Yo Shen !",
 	"+17348348282": "Yo Yisha! Wha~~~up!"
 }
- 
+
 @app.route("/", methods=['GET', 'POST'])
 def hello_monkey():
 
@@ -36,12 +36,14 @@ def handleMessage():
 	counter = session.get('counter', 0)
 	counter += 1
 	session['counter'] = counter
+	message = ""
 
 	requestBody = handlerMessageBody()
 
 	from_number = request.values.get('From')
 	messageTo = request.values.get('To')
-	message = ""
+	if not from_number or not messageTo:
+		return "No From number or To number"
 	if from_number in callers:
 		name = callers[from_number]
 	else:
@@ -54,7 +56,10 @@ def handleMessage():
 	return message
 
 def handlerMessageBody():
-	requestBody = request.values.get('Body').encode('utf-8')     
+	if 'Body' not in request.values:
+		return "No message Body"
+	else:
+		requestBody = request.values.get('Body').encode('utf-8')
 	requestParams = requestBody.split(' ')
 	responseMessage = ""
 	if len(requestParams) == 0:
@@ -74,7 +79,7 @@ def handlerMessageBody():
 		responseMessage = "hehe your sister! zai jian!"
 	else:
 		# Give options:
-		responseMessage = "Yo. Welcome to xxx. There are several options you can have: 1. Navigate from {from} to {to}. 2. Just reply 'hehe'."
+		responseMessage = "Not a valid option. There are several options you can have: 1. Navigate from {from} to {to}. 2. Just reply 'hehe'."
 	return responseMessage
 
 def getDirections(origin,destination):
