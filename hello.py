@@ -7,7 +7,7 @@ from googlemaps import convert
 from BeautifulSoup import BeautifulSoup
 import googlemaps
 from googlemaps import directions as getDirectionsUsingGoogleMap
-#AIzaSyC6ATRDCMZm2hv7Ay2nl3EgA98r2ebKHEQ
+from google import google
 
 # The session object makes use of a secret key.
 SECRET_KEY = 'a secret key'
@@ -57,6 +57,9 @@ def handleMessage():
 	return message
 
 def handlerMessageBody():
+
+	commandMessage = "Command: 1. Navigate from {from} to {to}. 2. Google keyword 3. Just reply 'hehe'."
+
 	if 'Body' not in request.values:
 		return "No message Body"
 	else:
@@ -64,7 +67,7 @@ def handlerMessageBody():
 	requestParams = requestBody.split(' ')
 	responseMessage = ""
 	if len(requestParams) == 0:
-		responseMessage = "Yo. Welcome to xxx. There are several options you can have: 1. Navigate from {from} to {to}. 2. Just reply 'hehe'."
+		responseMessage = commandMessage
 
 	elif requestParams[0].lower() == "navigate" :
 		# Get directions
@@ -76,11 +79,19 @@ def handlerMessageBody():
 		destination = requestBody[toIndex+3:]
 
 		responseMessage = getDirections(origin,destination)
+	elif requestParams[0].lower() == "google" :
+		keyword = ""
+		for item in requestParams[1:]:
+			keyword += item
+		num_page = 1
+		search_results = google.search(keyword, num_page)
+		responseMessage = search_results[0].description
+
 	elif requestParams[0].lower() == "hehe" :
 		responseMessage = "hehe your sister! zai jian!"
 	else:
 		# Give options:
-		responseMessage = "Not a valid option. There are several options you can have: 1. Navigate from {from} to {to}. 2. Just reply 'hehe'."
+		responseMessage = "Not a valid option." + commandMessage
 	return responseMessage
 
 def getDirections(origin,destination):
