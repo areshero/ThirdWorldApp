@@ -50,7 +50,7 @@ def handleMessage():
 		name = "Monkey"
 	if 'To' in request.values:
 		
-		message = "".join(["Body: ", requestBody, " ...... ", name, " has messaged ", messageTo, ", ", str(counter), " times."])
+		message = "".join(["Body: \n", requestBody, " ...... Hey ", name, " Anything else?"])
 	else:
 		message = "error"
 	return message
@@ -93,7 +93,7 @@ def getDirections(origin,destination):
 		soup = BeautifulSoup(html)
 		text_parts = soup.findAll(text=True)
 		text = ''.join(text_parts)
-		res += str(index+1) +". "+ text + ". "
+		res += str(index+1) +". "+ text + ".\n "
 
 	return res
 '''
