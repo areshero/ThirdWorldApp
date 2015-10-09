@@ -8,9 +8,21 @@ from BeautifulSoup import BeautifulSoup
 import googlemaps
 from googlemaps import directions as getDirectionsUsingGoogleMap
 from google import google
+from twitter import *
+import os
 
 # The session object makes use of a secret key.
 SECRET_KEY = 'a secret key'
+
+# Twitter key
+CONSUMER_KEY = 'UL3gpjEYeyVDAzt9UbUJWEZTN'
+CONSUMER_SECRET = 'UoqVQytCAjvFqDBHe7vIkISDYqtTtrEpopzb5E6vS2ckNwm5iG'
+ACCESS_TOKEN = '3829007953-vSaGe37Wnq0z29hnGro6Y33K3qbxIRwfpNHoMZJ'
+ACCESS_TOKEN_SECRET = 'QVTIeDCGUSuIn8wHeqeqN9CpTDVBB2takYRHaXAmCJw5H'
+
+# Twitter
+t = Twitter(auth=OAuth(ACCESS_TOKEN, ACCESS_TOKEN_SECRET, CONSUMER_KEY, CONSUMER_SECRET))
+
 app = Flask(__name__)
 app.config.from_object(__name__)
 # Try adding your own number to this list!
@@ -89,6 +101,10 @@ def handlerMessageBody():
 
 	elif requestParams[0].lower() == "hehe" :
 		responseMessage = "hehe your sister! zai jian!"
+	elif requestParams[0].lower() == "tweet":
+		responseMessage = "Twitter updated"
+		twitterMessageBody = requestBody[8:]
+		t.statuses.update(status=twitterMessageBody)
 	else:
 		# Give options:
 		responseMessage = "Not a valid option." + commandMessage
