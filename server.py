@@ -44,15 +44,6 @@ callers = {
 	"+17348348282": "Yo Yisha! Wha~~~up!"
 }
 
-def getRequestParams():
-	if 'Body' not in request.values:
-		return "No message Body"
-	else:
-		requestBody = request.values.get('Body').encode('utf-8')
-
-	requestParams = requestBody.split(' ')
-	return requestParams
-
 @app.route("/", methods=['GET', 'POST'])
 def root():
 	message = handleMessage()
@@ -64,7 +55,13 @@ def root():
 @app.route("/google", methods=['GET', 'POST'])
 def doGoogleSearch():
 	responseMessage = ""
-	requestParams = getRequestParams()
+
+	if 'Body' not in request.values:
+		return "No message Body"
+	else:
+		requestBody = request.values.get('Body').encode('utf-8')
+
+	requestParams = requestBody.split(' ')
 	print requestParams[0].lower()
 	keyword = ""
 	for item in requestParams[1:]:
@@ -77,6 +74,12 @@ def doGoogleSearch():
 @app.route("/navigate", methods=['GET', 'POST'])
 def doNavigate():
 	responseMessage = ""
+	if 'Body' not in request.values:
+		return "No message Body"
+	else:
+		requestBody = request.values.get('Body').encode('utf-8')
+
+	requestParams = requestBody.split(' ')
 	fromIndex = requestBody.index('from')
 	toIndex = requestBody.index('to')
 	origin = requestBody[fromIndex+5:toIndex]
@@ -89,7 +92,11 @@ def doNavigate():
 def doTweet():
 	responseMessage = ""
 	t = Twitter(auth=OAuth(ACCESS_TOKEN, ACCESS_TOKEN_SECRET, CONSUMER_KEY, CONSUMER_SECRET))
-	
+	if 'Body' not in request.values:
+		return "No message Body"
+	else:
+		requestBody = request.values.get('Body').encode('utf-8')
+
 	twitterMessageBody = requestBody[8:]
 	try:
 		t.statuses.update(status=twitterMessageBody)
@@ -123,8 +130,12 @@ def handleMessage():
 def getResponseBody():
 
 	commandMessage = "Command: 1. Navigate from {from} to {to}. 2. Google {keyword} 3. Tweet {message}."
+	if 'Body' not in request.values:
+		return "No message Body"
+	else:
+		requestBody = request.values.get('Body').encode('utf-8')
 
-	requestParams = getRequestParams()
+	requestParams = requestBody.split(' ')
 	responseMessage = ""
 
 	if len(requestParams) == 0:
