@@ -22,15 +22,6 @@ need to sell or buy stock now, right now
 # The session object makes use of a secret key.
 SECRET_KEY = 'a secret key'
 
-# Twitter key
-CONSUMER_KEY = 'UL3gpjEYeyVDAzt9UbUJWEZTN'
-CONSUMER_SECRET = 'UoqVQytCAjvFqDBHe7vIkISDYqtTtrEpopzb5E6vS2ckNwm5iG'
-ACCESS_TOKEN = '3829007953-vSaGe37Wnq0z29hnGro6Y33K3qbxIRwfpNHoMZJ'
-ACCESS_TOKEN_SECRET = 'QVTIeDCGUSuIn8wHeqeqN9CpTDVBB2takYRHaXAmCJw5H'
-
-# Twitter
-t = Twitter(auth=OAuth(ACCESS_TOKEN, ACCESS_TOKEN_SECRET, CONSUMER_KEY, CONSUMER_SECRET))
-
 app = Flask(__name__)
 app.config.from_object(__name__)
 
@@ -55,20 +46,21 @@ def root():
 @app.route("/google", methods=['GET', 'POST'])
 def doGoogleSearch():
 	responseMessage = ""
-
 	if 'Body' not in request.values:
 		return "No message Body"
 	else:
 		requestBody = request.values.get('Body').encode('utf-8')
 
 	requestParams = requestBody.split(' ')
-	print requestParams[0].lower()
 	keyword = ""
 	for item in requestParams[1:]:
 		keyword += item
 	num_page = 1
 	search_results = google.search(keyword, num_page)
-	responseMessage = search_results[0].description
+	if len(search_results) > 0:
+		responseMessage = unicode(search_results[0].description, "utf-8")
+	else:
+		responseMessage = "Error, no such results"
 	return responseMessage
 
 @app.route("/navigate", methods=['GET', 'POST'])
@@ -88,10 +80,21 @@ def doNavigate():
 	responseMessage = getDirections(origin,destination)
 	return responseMessage
 
+def getTweetClient():
+		# Twitter key
+	CONSUMER_KEY = 'UL3gpjEYeyVDAzt9UbUJWEZTN'
+	CONSUMER_SECRET = 'UoqVQytCAjvFqDBHe7vIkISDYqtTtrEpopzb5E6vS2ckNwm5iG'
+	ACCESS_TOKEN = '3829007953-vSaGe37Wnq0z29hnGro6Y33K3qbxIRwfpNHoMZJ'
+	ACCESS_TOKEN_SECRET = 'QVTIeDCGUSuIn8wHeqeqN9CpTDVBB2takYRHaXAmCJw5H'
+
+	# Twitter
+	t = Twitter(auth=OAuth(ACCESS_TOKEN, ACCESS_TOKEN_SECRET, CONSUMER_KEY, CONSUMER_SECRET))
+	return t
 @app.route("/tweet", methods=['GET', 'POST'])
 def doTweet():
+
 	responseMessage = ""
-	t = Twitter(auth=OAuth(ACCESS_TOKEN, ACCESS_TOKEN_SECRET, CONSUMER_KEY, CONSUMER_SECRET))
+	t = getTweetClient()
 	if 'Body' not in request.values:
 		return "No message Body"
 	else:
@@ -142,8 +145,6 @@ def getResponseBody():
 		responseMessage = commandMessage
 	elif requestParams[0].lower() == "navigate" :
 		# Get directions
-		# origin = "University of Southern California, Los Angeles, CA"
-		# destination = "Galen Center, South Figueroa Street, Los Angeles, CA"
 		fromIndex = requestBody.index('from')
 		toIndex = requestBody.index('to')
 		origin = requestBody[fromIndex+5:toIndex]
@@ -155,8 +156,11 @@ def getResponseBody():
 			keyword += item
 		num_page = 1
 		search_results = google.search(keyword, num_page)
-		responseMessage = search_results[0].description
+		print search_results[0].description
+		if len(search_results) > 0:
+			responseMessage = unicode(search_results[0].description, "utf-8")
 	elif requestParams[0].lower() == "tweet":
+		t = getTweetClient()
 		responseMessage = "Twitter updated"
 		twitterMessageBody = requestBody[8:]
 		t.statuses.update(status=twitterMessageBody)
