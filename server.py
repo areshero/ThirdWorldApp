@@ -182,7 +182,7 @@ def getDirections(origin,destination):
 		soup = BeautifulSoup(html)
 		text_parts = soup.findAll(text=True)
 		text = ''.join(text_parts)
-		res += str(index+1) +". "+ text + ".\n "
+		res += str(index+1) +". "+ text +" travelMode: " +currStep["travel_mode"].lower()+", distance: " + currStep["distance"]["text"] +", duration: " +currStep["duration"]["text"]+ ".\n "
 	return res
 
 if __name__ == "__main__":
