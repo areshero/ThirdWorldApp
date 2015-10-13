@@ -30,7 +30,7 @@ callers = {
 	"+14158675309": "Curious George",
 	"+12135097300": "Chong",
 	"+14158675311": "Virgil",
-	"+12134001959": "SBLuke",
+	"+12134001959": "Luke",
 	"+16412750872": "Yo Shen !",
 	"+17348348282": "Yo Yisha!"
 }
@@ -39,7 +39,7 @@ callers = {
 def root():
 	message = handleMessage()
 	resp = twilio.twiml.Response()
-	resp.say('Hello monkey!!...... ')
+	resp.say('Hello !!...... ')
 	resp.sms(message)
 	return str(resp)
 
