@@ -28,11 +28,11 @@ app.config.from_object(__name__)
 # Try adding your own number to this list!
 callers = {
 	"+14158675309": "Curious George",
-	"+12135097300": "Hehehehhe",
+	"+12135097300": "Chong",
 	"+14158675311": "Virgil",
 	"+12134001959": "SBLuke",
 	"+16412750872": "Yo Shen !",
-	"+17348348282": "Yo Yisha! Wha~~~up!"
+	"+17348348282": "Yo Yisha!"
 }
 
 @app.route("/", methods=['GET', 'POST'])
@@ -125,14 +125,14 @@ def handleMessage():
 	else:
 		name = "Guest"
 	if 'To' in request.values:
-		message = "".join(["Body: \n", responseBody, " ...... Hey ", name, " Anything else?"])
+		message = "".join(["Body: \n", responseBody, " ...... \n", name, " Anything else?"])
 	else:
 		message = "error"
 	return message
 
 def getResponseBody():
 
-	commandMessage = "Command: 1. Navigate from {from} to {to}. 2. Google {keyword} 3. Tweet {message}."
+	commandMessage = "Command: \n 1. Navigate from {from} to {to}.\n 2. Google {keyword}.\n 3. Tweet {message}.\n"
 	if 'Body' not in request.values:
 		return "No message Body"
 	else:
@@ -156,7 +156,7 @@ def getResponseBody():
 			keyword += item
 		num_page = 1
 		search_results = google.search(keyword, num_page)
-		print search_results[0].description
+		# print search_results[0].description
 		if len(search_results) > 0:
 			responseMessage = unicode(search_results[0].description, "utf-8")
 	elif requestParams[0].lower() == "tweet":
@@ -168,7 +168,7 @@ def getResponseBody():
 		responseMessage = ":)"
 	else:
 		# Give options:
-		responseMessage = "Not a valid option." + commandMessage
+		responseMessage = commandMessage
 	return responseMessage
 
 def getDirections(origin,destination):
