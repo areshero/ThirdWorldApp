@@ -39,7 +39,7 @@ callers = {
 def root():
 	message = handleMessage()
 	resp = twilio.twiml.Response()
-	resp.say('Hello !!...... ')
+	#resp.say('Hello !!...... ')
 	resp.sms(message)
 	return str(resp)
 
@@ -125,7 +125,7 @@ def handleMessage():
 	else:
 		name = "Guest"
 	if 'To' in request.values:
-		message = "".join(["Body: \n", responseBody, " ...... \n", name, " Anything else?"])
+		message = responseBody
 	else:
 		message = "error"
 	return message
