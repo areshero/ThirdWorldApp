@@ -163,7 +163,7 @@ def getResponseBody():
 	elif requestParams[0].lower() == "tweet":
 		t = getTweetClient()
 		responseMessage = "Twitter updated"
-		twitterMessageBody = requestBody[8:]
+		twitterMessageBody = requestBody[5:]
 		t.statuses.update(status=twitterMessageBody)
 	elif requestParams[0].lower() == "hehe" :
 		responseMessage = ":)"
