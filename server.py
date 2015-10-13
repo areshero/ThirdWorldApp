@@ -132,7 +132,7 @@ def handleMessage():
 
 def getResponseBody():
 
-	commandMessage = "Command: 1. Navigate from {from} to {to}. 2. Google {keyword} 3. Tweet {message}."
+	commandMessage = "Command: 1. Navigate from {from} to {to}.\n 2. Google {keyword}.\n 3. Tweet {message}.\n"
 	if 'Body' not in request.values:
 		return "No message Body"
 	else:
@@ -168,7 +168,7 @@ def getResponseBody():
 		responseMessage = ":)"
 	else:
 		# Give options:
-		responseMessage = "Not a valid option." + commandMessage
+		responseMessage = commandMessage
 	return responseMessage
 
 def getDirections(origin,destination):
