@@ -133,6 +133,7 @@ def handleMessage():
 def getResponseBody():
 
 	commandMessage = "Command: \n 1. Navigate from {from} to {to}.\n 2. Google {keyword}.\n 3. Tweet {message}.\n"
+
 	if 'Body' not in request.values:
 		return "No message Body"
 	else:
